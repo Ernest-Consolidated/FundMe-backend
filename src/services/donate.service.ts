@@ -1,6 +1,6 @@
 import DonateModel, { DonateInput } from "../models/donate.model";
 
-export async function createUser(input: DonateInput) {
+export async function createDonation(input: DonateInput) {
   try {
     const Donation = await DonateModel.create(input);
 

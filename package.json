@@ -14,13 +14,15 @@
   "author": "Nnaemeka Onukwube",
   "license": "ISC",
   "dependencies": {
+    "@bebapps/rapyd-sdk": "^0.0.4",
     "config": "^3.3.7",
     "cors": "^2.8.5",
     "dayjs": "^1.11.5",
     "express": "^4.18.1",
+    "express-validator": "^6.14.2",
     "lodash": "^4.17.21",
     "mongoose": "^6.5.2",
-    "nanoid": "^4.0.0",
+    "nanoid": "^3.3.4",
     "pino": "^8.4.2",
     "pino-pretty": "^9.0.1",
     "zod": "^3.18.0"

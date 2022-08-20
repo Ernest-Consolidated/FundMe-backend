@@ -6,6 +6,7 @@ const nanoid = customAlphabet("abcdefghijklmnopqrstuvwxyz0123456789", 10);
 export interface DonateInput {
   name: string;
   organization: string;
+  amount: number;
 }
 
 export interface DonateDocument extends DonateInput, mongoose.Document {
@@ -24,6 +25,10 @@ const DonateSchema = new mongoose.Schema(
       default: () => `user_${nanoid()}`,
     },
     name: {
+      type: String,
+      required: true,
+    },
+    amount: {
       type: String,
       required: true,
     },
