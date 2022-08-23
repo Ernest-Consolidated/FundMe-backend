@@ -1,2 +1,6 @@
 node_modules/
 build/
+.gcloudignore
+.git
+.gitignore
+scripts

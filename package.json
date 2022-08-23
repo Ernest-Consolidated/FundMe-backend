@@ -6,11 +6,12 @@
   "scripts": {
     "start:dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "start": "node build/src/app.js",
-    "postinstall": "tsc",
+    "gcp-build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "fintech"
+    "fintech",
+    "donation"
   ],
   "author": "Nnaemeka Onukwube",
   "license": "ISC",

@@ -10,7 +10,7 @@ function routes(app: Express) {
 
   // Background task
   app.get("/", (req: Request, res: Response) => {
-    res.send("Running Background task...⌛");
+    res.status(200).send("Background task running on Google App Engine");
   });
 
   // Create User route

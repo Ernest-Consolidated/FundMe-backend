@@ -5,6 +5,8 @@ import routes from "../routes";
 function creatServer() {
   const app = express();
 
+  app.enable("trust proxy");
+
   app.use(cors());
 
   app.use(express.json());
