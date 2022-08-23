@@ -12,6 +12,8 @@ const rapid = new RapydClient(
 );
 
 export async function createDonationHandler(req: Request, res: Response) {
+  res.header("Access-Control-Allow-Origin", "*");
+
   const errorFormatter = ({
     location,
     msg,
@@ -43,7 +45,7 @@ export async function createDonationHandler(req: Request, res: Response) {
       capture: true,
     });
 
-    console.log(response);
+    // console.log(response);
 
     if (response) {
       await createDonation({ name, organization, amount });
@@ -51,7 +53,9 @@ export async function createDonationHandler(req: Request, res: Response) {
       log.info(`------Donation Created-------`);
     }
 
-    res.redirect(response.redirect_url);
+    // const URI = `https://enigmatic-mesa-12584.herokuapp.com/${response.redirect_url}`;
+    // log.info(URI);
+    res.send(response.redirect_url);
   } catch (error: any) {
     log.error(error.message);
   }
