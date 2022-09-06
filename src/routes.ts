@@ -1,6 +1,11 @@
 import { Express, Request, Response } from "express";
 import { body } from "express-validator";
 import { createDonationHandler } from "./controllers/donate.controller";
+import {
+  createVirtualAccountHandler,
+  createVirtualCardHandler,
+  createWalletHandler,
+} from "./controllers/wallet.controller";
 
 function routes(app: Express) {
   // Performance and healthcheck
@@ -21,10 +26,16 @@ function routes(app: Express) {
     createDonationHandler
   );
 
+  app.post("/api/wallet", createWalletHandler);
+
+  app.post("/api/virtual_account", createVirtualAccountHandler);
+
+  app.post("/api/card", createVirtualCardHandler);
+
   // webhook for Rapyd
   app.post("/hook", (req, res) => {
     console.log(req.body); // Call your action on the request here
-    res.status(200).end(); // Responding is important
+    res.status(200).send().end(); // Responding is important
   });
 }
 

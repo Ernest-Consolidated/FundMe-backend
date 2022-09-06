@@ -4,12 +4,9 @@ import { createDonation } from "../services/donate.service";
 import { donateData } from "../../types";
 import { ValidationError, validationResult } from "express-validator";
 import { createPayment } from "@bebapps/rapyd-sdk/dist/generated/collect/apis/Payment";
+import { SimulateABankTransferToAWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requests/SimulateABankTransferToAWalletRequest";
 import log from "../utils/logger";
-
-const rapid = new RapydClient(
-  "1634e55cea1f50198d63e9768f9e06c8ab02f4cc3ca96171db448b716045bebbe52488821675393d",
-  "967E1691B6E18C358D95"
-);
+import { rapid } from "../services/main.service";
 
 export async function createDonationHandler(req: Request, res: Response) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -25,7 +22,7 @@ export async function createDonationHandler(req: Request, res: Response) {
     return `${location}[${param}]: ${msg}`;
   };
 
-  const { name, organization, amount, payment_method }: donateData = req.body;
+  const { name, userWalletId, amount, payment_method }: donateData = req.body;
 
   try {
     const result = validationResult(req).formatWith(errorFormatter);
@@ -37,18 +34,25 @@ export async function createDonationHandler(req: Request, res: Response) {
       amount,
       currency: "SGD",
       payment_method,
+      description: "Payment by card",
       payment_method_options: {
         "3d_required": "true",
       },
       error_payment_url: "https://help-fd14d.web.app/payment_error",
-      complete_payment_url: "https://help-fd14d.web.app/",
+      complete_payment_url: "https://help-fd14d.web.app/payment_success",
       capture: true,
+      ewallets: [
+        {
+          ewallet: userWalletId,
+          percentage: 100,
+        },
+      ],
     });
 
     // console.log(response);
 
     if (response) {
-      await createDonation({ name, organization, amount });
+      await createDonation({ name, userWalletId, amount });
       log.info(`---------------`);
       log.info(`------Donation Created-------`);
     }

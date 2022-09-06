@@ -18,9 +18,11 @@
   "dependencies": {
     "@bebapps/rapyd-sdk": "^0.0.4",
     "@types/pino": "^7.0.5",
+    "axios": "^0.27.2",
     "config": "^3.3.7",
     "cors": "^2.8.5",
     "dayjs": "^1.11.5",
+    "ebay-oauth-nodejs-client": "^1.2.1",
     "express": "^4.18.1",
     "express-validator": "^6.14.2",
     "lodash": "^4.17.21",
