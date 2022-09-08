@@ -6,7 +6,11 @@ import { ValidationError, validationResult } from "express-validator";
 import { createPayment } from "@bebapps/rapyd-sdk/dist/generated/collect/apis/Payment";
 import { SimulateABankTransferToAWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requests/SimulateABankTransferToAWalletRequest";
 import log from "../utils/logger";
-import { rapid } from "../services/main.service";
+
+const rapid = new RapydClient(
+  "1634e55cea1f50198d63e9768f9e06c8ab02f4cc3ca96171db448b716045bebbe52488821675393d",
+  "967E1691B6E18C358D95"
+);
 
 export async function createDonationHandler(req: Request, res: Response) {
   res.header("Access-Control-Allow-Origin", "*");

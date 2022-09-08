@@ -5,6 +5,7 @@ import {
   createVirtualAccountHandler,
   createVirtualCardHandler,
   createWalletHandler,
+  getWalletBalancesHandler,
 } from "./controllers/wallet.controller";
 
 function routes(app: Express) {
@@ -31,6 +32,8 @@ function routes(app: Express) {
   app.post("/api/virtual_account", createVirtualAccountHandler);
 
   app.post("/api/card", createVirtualCardHandler);
+
+  app.post("/api/retrieve_balance", getWalletBalancesHandler);
 
   // webhook for Rapyd
   app.post("/hook", (req, res) => {
