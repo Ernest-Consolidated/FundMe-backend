@@ -10,11 +10,11 @@ import { IssueCardRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requ
 import { RapydClient } from "@bebapps/rapyd-sdk";
 import { retrieveWalletBalances } from "@bebapps/rapyd-sdk/dist/generated/wallet/apis/WalletTransaction";
 import { RetrieveWalletBalancesRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/RetrieveWalletBalancesRequest";
-import axios from "axios";
+require("dotenv").config();
 
 const rapid = new RapydClient(
-  "1634e55cea1f50198d63e9768f9e06c8ab02f4cc3ca96171db448b716045bebbe52488821675393d",
-  "967E1691B6E18C358D95"
+  process.env.SECRET_KEY as any,
+  process.env.ACCESS_TOKEN as any
 );
 
 export const createWalletHandler = async (req: Request, res: Response) => {
