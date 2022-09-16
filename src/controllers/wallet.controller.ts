@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
 import { createWallet } from "@bebapps/rapyd-sdk/dist/generated/wallet/apis/Wallet";
+import { updateWalletContact } from "@bebapps/rapyd-sdk/dist/generated/wallet/apis/WalletContact";
 import { issueVirtualAccountNumberToWallet } from "@bebapps/rapyd-sdk/dist/generated/issuing/apis/VirtualAccountNumber";
 import { CreateWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/CreateWalletRequest";
+import { createCheckoutPage } from "@bebapps/rapyd-sdk/dist/generated/collect/apis/CheckoutPage";
 import { nanoid } from "nanoid";
 import log from "../utils/logger";
 import { issueCard } from "@bebapps/rapyd-sdk/dist/generated/issuing/apis/IssuedCard";
@@ -10,6 +12,9 @@ import { IssueCardRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requ
 import { RapydClient } from "@bebapps/rapyd-sdk";
 import { retrieveWalletBalances } from "@bebapps/rapyd-sdk/dist/generated/wallet/apis/WalletTransaction";
 import { RetrieveWalletBalancesRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/RetrieveWalletBalancesRequest";
+import { UpdateWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/UpdateWalletRequest";
+import { UpdateWalletContactRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/UpdateWalletContactRequest";
+import { CreateCheckoutPageRequest } from "@bebapps/rapyd-sdk/dist/generated/collect/requests/CreateCheckoutPageRequest";
 require("dotenv").config();
 
 const rapid = new RapydClient(
@@ -31,6 +36,29 @@ export const createWalletHandler = async (req: Request, res: Response) => {
         merchant_defined: true,
       },
       ewallet_reference_id: `referenceId_${nanoid()}`,
+    });
+
+    if (!response) return;
+
+    res.send(response);
+  } catch (error: any) {
+    log.error(error.message);
+  }
+};
+
+export const updateWalletHandler = async (req: Request, res: Response) => {
+  const { wallet, date_of_birth, contact }: UpdateWalletContactRequest =
+    req.body;
+
+  try {
+    const response = await updateWalletContact(rapid, {
+      wallet,
+      contact,
+      date_of_birth,
+      // address,
+      metadata: {
+        merchant_defined: "updated",
+      },
     });
 
     if (!response) return;
@@ -94,6 +122,30 @@ export const getWalletBalancesHandler = async (req: Request, res: Response) => {
     if (!result) return;
 
     res.send(result);
+  } catch (error: any) {
+    log.error(error.message);
+  }
+};
+
+export const createCheckoutHandler = async (req: Request, res: Response) => {
+  const { amount, currency, country, ewallet }: CreateCheckoutPageRequest =
+    req.body;
+
+  try {
+    if (country === "NG") {
+      return;
+    }
+
+    const result = await createCheckoutPage(rapid, {
+      amount,
+      currency,
+      country,
+      ewallet,
+    });
+
+    if (!result) return;
+
+    res.send(result.redirect_url);
   } catch (error: any) {
     log.error(error.message);
   }
