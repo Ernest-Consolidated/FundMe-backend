@@ -4,6 +4,7 @@ import { updateWalletContact } from "@bebapps/rapyd-sdk/dist/generated/wallet/ap
 import { issueVirtualAccountNumberToWallet } from "@bebapps/rapyd-sdk/dist/generated/issuing/apis/VirtualAccountNumber";
 import { CreateWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/CreateWalletRequest";
 import { createCheckoutPage } from "@bebapps/rapyd-sdk/dist/generated/collect/apis/CheckoutPage";
+import { createIdentityVerificationPage } from "@bebapps/rapyd-sdk/dist/generated/wallet/apis/IdentityVerification";
 import { nanoid } from "nanoid";
 import log from "../utils/logger";
 import { issueCard } from "@bebapps/rapyd-sdk/dist/generated/issuing/apis/IssuedCard";
@@ -15,6 +16,7 @@ import { RetrieveWalletBalancesRequest } from "@bebapps/rapyd-sdk/dist/generated
 import { UpdateWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/UpdateWalletRequest";
 import { UpdateWalletContactRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/UpdateWalletContactRequest";
 import { CreateCheckoutPageRequest } from "@bebapps/rapyd-sdk/dist/generated/collect/requests/CreateCheckoutPageRequest";
+import { CreateIdentityVerificationPageRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/CreateIdentityVerificationPageRequest";
 require("dotenv").config();
 
 const rapid = new RapydClient(
@@ -141,6 +143,7 @@ export const createCheckoutHandler = async (req: Request, res: Response) => {
       currency,
       country,
       ewallet,
+      complete_payment_url: "https://help-fd14d.web.app/payment_success",
     });
 
     if (!result) return;
@@ -148,5 +151,25 @@ export const createCheckoutHandler = async (req: Request, res: Response) => {
     res.send(result.redirect_url);
   } catch (error: any) {
     log.error(error.message);
+  }
+};
+
+export const verifyIdentityHandler = async (req: Request, res: Response) => {
+  const { contact, ewallet }: CreateIdentityVerificationPageRequest = req.body;
+
+  try {
+    const result = await createIdentityVerificationPage(rapid, {
+      contact,
+      ewallet,
+      reference_id: `ref_${nanoid(11)}`,
+      complete_url: "https://help-fd14d.web.app/complete",
+      cancel_url: "https://help-fd14d.web.app/dashboard",
+    });
+
+    if (!result) return;
+
+    res.send(result.redirect_url);
+  } catch (error: any) {
+    log.error(error);
   }
 };

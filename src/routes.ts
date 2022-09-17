@@ -8,7 +8,9 @@ import {
   createWalletHandler,
   getWalletBalancesHandler,
   updateWalletHandler,
+  verifyIdentityHandler,
 } from "./controllers/wallet.controller";
+import log from "./utils/logger";
 
 function routes(app: Express) {
   // Performance and healthcheck
@@ -41,10 +43,12 @@ function routes(app: Express) {
 
   app.post("/api/create_checkout", createCheckoutHandler);
 
+  app.post("/api/verify", verifyIdentityHandler);
+
   // webhook for Rapyd
-  app.post("/hook", (req, res) => {
-    console.log(req.body); // Call your action on the request here
-    res.status(200).send().end(); // Responding is important
+  app.get("/hook", (req, res) => {
+    log.info(req.body); // Call your action on the request here
+    res.status(200).send(req.body).end(); // Responding is important
   });
 }
 
