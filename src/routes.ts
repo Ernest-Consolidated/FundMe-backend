@@ -46,7 +46,7 @@ function routes(app: Express) {
   app.post("/api/verify", verifyIdentityHandler);
 
   // webhook for Rapyd
-  app.get("/hook", (req, res) => {
+  app.post("/hook", (req, res) => {
     log.info(req.body); // Call your action on the request here
     res.status(200).send(req.body).end(); // Responding is important
   });

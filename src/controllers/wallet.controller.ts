@@ -75,12 +75,11 @@ export const createVirtualAccountHandler = async (
   req: Request,
   res: Response
 ) => {
-  const { country, ewallet }: IssueVirtualAccountNumberToWalletRequest =
-    req.body;
+  const { ewallet }: IssueVirtualAccountNumberToWalletRequest = req.body;
 
   try {
     const result = await issueVirtualAccountNumberToWallet(rapid, {
-      country,
+      country: "United States",
       ewallet,
       description: "Issue virtual account number to wallet",
       currency: "USD",
@@ -96,13 +95,12 @@ export const createVirtualAccountHandler = async (
 };
 
 export const createVirtualCardHandler = async (req: Request, res: Response) => {
-  const { country, ewallet_contact, card_program }: IssueCardRequest = req.body;
+  const { ewallet_contact }: IssueCardRequest = req.body;
 
   try {
     const result = await issueCard(rapid, {
       ewallet_contact,
-      country,
-      card_program,
+      card_program: "cardprog_2dc16a9721c1884ab836fb2af5a04c5b",
     });
 
     if (!result) return;
@@ -162,13 +160,16 @@ export const verifyIdentityHandler = async (req: Request, res: Response) => {
       contact,
       ewallet,
       reference_id: `ref_${nanoid(11)}`,
-      complete_url: "https://help-fd14d.web.app/complete",
-      cancel_url: "https://help-fd14d.web.app/dashboard",
+      // complete_url: "https://help-fd14d.web.app/complete",
+      // cancel_url: "https://help-fd14d.web.app/dashboard",
     });
 
     if (!result) return;
 
-    res.send(result.redirect_url);
+    const dashboard = "dashboard";
+
+    // res.send({result, dashboard});
+    res.send(result);
   } catch (error: any) {
     log.error(error);
   }
