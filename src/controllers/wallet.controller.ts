@@ -7,7 +7,11 @@ import { createCheckoutPage } from "@bebapps/rapyd-sdk/dist/generated/collect/ap
 import { createIdentityVerificationPage } from "@bebapps/rapyd-sdk/dist/generated/wallet/apis/IdentityVerification";
 import { nanoid } from "nanoid";
 import log from "../utils/logger";
-import { issueCard } from "@bebapps/rapyd-sdk/dist/generated/issuing/apis/IssuedCard";
+import {
+  activateIssuedCard,
+  issueCard,
+  retrieveIssuedCardDetails,
+} from "@bebapps/rapyd-sdk/dist/generated/issuing/apis/IssuedCard";
 import { IssueVirtualAccountNumberToWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requests/IssueVirtualAccountNumberToWalletRequest";
 import { IssueCardRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requests/IssueCardRequest";
 import { RapydClient } from "@bebapps/rapyd-sdk";
@@ -17,6 +21,8 @@ import { UpdateWalletRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/re
 import { UpdateWalletContactRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/UpdateWalletContactRequest";
 import { CreateCheckoutPageRequest } from "@bebapps/rapyd-sdk/dist/generated/collect/requests/CreateCheckoutPageRequest";
 import { CreateIdentityVerificationPageRequest } from "@bebapps/rapyd-sdk/dist/generated/wallet/requests/CreateIdentityVerificationPageRequest";
+import { ActivateIssuedCardRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requests/ActivateIssuedCardRequest";
+import { RetrieveIssuedCardDetailsRequest } from "@bebapps/rapyd-sdk/dist/generated/issuing/requests/RetrieveIssuedCardDetailsRequest";
 require("dotenv").config();
 
 const rapid = new RapydClient(
@@ -79,7 +85,7 @@ export const createVirtualAccountHandler = async (
 
   try {
     const result = await issueVirtualAccountNumberToWallet(rapid, {
-      country: "United States",
+      country: "US",
       ewallet,
       description: "Issue virtual account number to wallet",
       currency: "USD",
@@ -171,6 +177,38 @@ export const verifyIdentityHandler = async (req: Request, res: Response) => {
     // res.send({result, dashboard});
     res.send(result);
   } catch (error: any) {
+    log.error(error);
+  }
+};
+
+export const activateCard = async (req: Request, res: Response) => {
+  const { card }: ActivateIssuedCardRequest = req.body;
+
+  try {
+    const result = await activateIssuedCard(rapid, {
+      card,
+    });
+
+    if (!result) return;
+
+    res.send(result);
+  } catch (error) {
+    log.error(error);
+  }
+};
+
+export const getCardDetails = async (req: Request, res: Response) => {
+  const { card }: RetrieveIssuedCardDetailsRequest = req.body;
+
+  try {
+    const result = await retrieveIssuedCardDetails(rapid, {
+      card,
+    });
+
+    if (!result) return;
+
+    res.send(result);
+  } catch (error) {
     log.error(error);
   }
 };

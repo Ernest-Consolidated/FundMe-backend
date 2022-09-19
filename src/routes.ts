@@ -2,10 +2,12 @@ import { Express, Request, Response } from "express";
 import { body } from "express-validator";
 import { createDonationHandler } from "./controllers/donate.controller";
 import {
+  activateCard,
   createCheckoutHandler,
   createVirtualAccountHandler,
   createVirtualCardHandler,
   createWalletHandler,
+  getCardDetails,
   getWalletBalancesHandler,
   updateWalletHandler,
   verifyIdentityHandler,
@@ -44,6 +46,10 @@ function routes(app: Express) {
   app.post("/api/create_checkout", createCheckoutHandler);
 
   app.post("/api/verify", verifyIdentityHandler);
+
+  app.post("/api/activate", activateCard);
+
+  app.post("/api/retrieve_card", getCardDetails);
 
   // webhook for Rapyd
   app.post("/hook", (req, res) => {
