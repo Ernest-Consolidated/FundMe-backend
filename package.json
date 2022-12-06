@@ -4,6 +4,7 @@
   "description": "Backend server for help.com",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "start:dev": "ts-node-dev --respawn --transpile-only src/app.ts",
     "start": "node build/src/app.js",
     "gcp-build": "tsc -p .",
